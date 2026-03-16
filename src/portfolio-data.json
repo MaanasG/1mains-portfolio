@@ -2,23 +2,24 @@
   "artist": "1mains",
   "streamCount": 5700000,
   "socials": [
-    { "name": "Instagram", "url": "https://instagram.com/1mains", "icon": "instagram" },
-    { "name": "Twitch", "url": "https://twitch.tv/1mains", "icon": "twitch" },
-    { "name": "YouTube", "url": "https://youtube.com/@1mainsarchive", "icon": "youtube" },
-    { "name": "Genius", "url": "https://genius.com/artists/1mains", "icon": "genius" }
+    { "name": "Instagram", "url": "https://instagram.com/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" },
+    { "name": "Twitch", "url": "https://twitch.tv/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/twitch.svg" },
+    { "name": "YouTube", "url": "https://youtube.com/@1mainsarchive", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" },
+    { "name": "Genius", "url": "https://genius.com/artists/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/genius.svg" },
+    { "name": "SoundCloud", "url": "https://soundcloud.com/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/soundcloud.svg" }
   ],
   "links": [
     {
       "label": "Telegram",
       "url": "https://t.me/+E-VyIJXcoGplNTZh",
       "description": "Samples archive & updates",
-      "icon": "telegram"
+      "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/telegram.svg"
     },
     {
       "label": "Beats Store",
       "url": "https://www.beatstars.com/from1mains",
       "description": "License my beats",
-      "icon": "store"
+      "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/beatstars.svg"
     }
   ],
   "daws": [

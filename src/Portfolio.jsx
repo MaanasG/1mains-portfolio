@@ -338,8 +338,8 @@ export default function Portfolio() {
         .social-link svg, .social-link img {
           width: 30px;
           height: 30px;
-          opacity: 0.35;
-          filter: grayscale(1) brightness(0.9);
+          opacity: 0.5;
+          filter: invert(1) opacity(0.45);
           transition: all 0.25s ease;
           animation: iconPulse 5s ease-in-out infinite;
         }
@@ -446,8 +446,8 @@ export default function Portfolio() {
         }
 
         @keyframes iconPulse {
-          0%, 100% { opacity: 0.35; }
-          50% { opacity: 0.45; }
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 0.6; }
         }
 
         .float-anim { animation: float 4s ease-in-out infinite; }
@@ -518,7 +518,7 @@ export default function Portfolio() {
         <div style={{ display: "flex", gap: "10px", marginBottom: "1.5rem", alignItems: "center" }}>
           {DATA.socials.map(s => (
             <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="social-link" title={s.name}>
-              {SocialIcons[s.icon]}
+              <img src={s.icon} alt={s.name} />
             </a>
           ))}
         </div>
@@ -526,7 +526,7 @@ export default function Portfolio() {
         <div className="yu-gothic" style={{ display: "flex", gap: "20px", marginBottom: "2.5rem", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
           {DATA.links.map(l => (
             <a key={l.label} href={l.url} target="_blank" rel="noopener noreferrer" className="social-link cta-link">
-              {SocialIcons[l.icon]}
+              <img src={l.icon} alt={l.label} />
               <span>{l.label}</span>
             </a>
           ))}
