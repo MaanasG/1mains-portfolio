@@ -1,0 +1,106 @@
+{
+  "artist": "1mains",
+  "streamCount": 5700000,
+  "socials": [
+    { "name": "Instagram", "url": "https://instagram.com/1mains", "icon": "instagram" },
+    { "name": "Twitch", "url": "https://twitch.tv/1mains", "icon": "twitch" },
+    { "name": "YouTube", "url": "https://youtube.com/@1mainsarchive", "icon": "youtube" },
+    { "name": "Genius", "url": "https://genius.com/artists/1mains", "icon": "genius" }
+  ],
+  "links": [
+    {
+      "label": "Telegram",
+      "url": "https://t.me/+E-VyIJXcoGplNTZh",
+      "description": "Samples archive & updates",
+      "icon": "telegram"
+    },
+    {
+      "label": "Beats Store",
+      "url": "https://www.beatstars.com/from1mains",
+      "description": "License my beats",
+      "icon": "store"
+    }
+  ],
+  "daws": [
+    { "name": "FL Studio", "logo": "https://upload.wikimedia.org/wikipedia/en/6/69/FL_Studio_11_just_logo.png" },
+    { "name": "LMMS", "logo": "https://images.icon-icons.com/1381/PNG/512/lmms_93989.png" },
+    { "name": "Audacity", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Audacity_Logo_nofilter.svg" },
+    { "name": "DaVinci Resolve 20", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/DaVinci_Resolve_Studio.png" },
+    { "name": "Ableton", "logo": "https://preview.redd.it/am-i-the-only-one-who-didnt-know-the-ableton-logo-is-a-mix-v0-meg6nawssnb01.jpg?auto=webp&s=d9920b8989c36dd465be586f22604cc3c87c9961" },
+    { "name": "Logic Pro", "logo": "https://upload.wikimedia.org/wikipedia/commons/1/10/Logicpro-icon.png" }
+  ],
+  "productions": [
+    {
+      "id": 1,
+      "title": "Hold On",
+      "artist": "Jace!",
+      "cover": "https://t2.genius.com/unsafe/465x465/https%3A%2F%2Fimages.genius.com%2Fc03c02da8625945a9ffa174723657030.1000x1000x1.jpg",
+      "url": "https://open.spotify.com/track/6pQNNtfCYSJZH4qMGVx0Cs?si=cff33ec71d8146e2",
+      "year": 2019
+    },
+    {
+      "id": 2,
+      "title": "AWAKENESE",
+      "artist": "Lil Darkie & CHRIST DILLINGER",
+      "cover": "https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F9d9f34e1a18120b65a827616ff6c17b4.1000x1000x1.png",
+      "url": "https://open.spotify.com/track/322IFKAEahTbl2o2qBGUdV?si=4a85278a11524c11",
+      "year": 2024
+    },
+    {
+      "id": 3,
+      "title": "Здоровье",
+      "artist": "OG Buda",
+      "cover": "https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fe60f620865f24a5fd63f95386fba17d7.1000x1000x1.png",
+      "url": "https://open.spotify.com/track/3fAopD7hP8PKrLNMtx4rji?si=54918ea286c54eff",
+      "year": 2023
+    },
+    {
+      "id": 4,
+      "title": "Bank",
+      "artist": "Jdot Breezy & Lil Poppa",
+      "cover": "https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F2f6a8a19b6a2d306bee89250965996ff.1000x1000x1.png",
+      "url": "https://open.spotify.com/track/6YsUKReVh2Sfsi9TJfvoND?si=2c7a4ccfd5894e27",
+      "year": 2023
+    },
+    {
+      "id": 5,
+      "title": "Hold On, Pt. 2",
+      "artist": "Jace!",
+      "cover": "https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2F62a5dc48bf326b1965385bc44d97df7a.749x749x1.png",
+      "url": "https://open.spotify.com/track/4UbHeElP9M5ziqe1VvyUOJ?si=9ce2477500644524",
+      "year": 2022
+    },
+    {
+      "id": 6,
+      "title": "they don’t even know",
+      "artist": "Artie J",
+      "cover": "https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fff1359827b2997b27b59873f3de4886e.1000x1000x1.jpg",
+      "url": "https://open.spotify.com/track/5yjL0Q1izlFUOEDJbqO1hM?si=de94df5e49bf413a",
+      "year": 2025
+    },
+    {
+      "id": 7,
+      "title": "spell thot!",
+      "artist": "Bernard Jabs",
+      "cover": "https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fdfc8d8c7fe93124945bdd1082cff5484.1000x1000x1.jpg",
+      "url": "https://open.spotify.com/track/3Kljx0hl4lJTEtlTvBnnx6?si=1efb0af03510403c",
+      "year": 2024
+    },
+    {
+      "id": 8,
+      "title": "CLEVELAND (OUTRO)",
+      "artist": "Desire",
+      "cover": "https://t2.genius.com/unsafe/344x344/https%3A%2F%2Fimages.genius.com%2Fd522cffbea0d6ac995df85dce549f548.1000x1000x1.jpg",
+      "url": "https://open.spotify.com/track/4qwxSPBaFxhMujIAA2ehie?si=a5b2bb16569c4cb9",
+      "year": 2025
+    },
+        {
+      "id": 9,
+      "title": "telly",
+      "artist": "mig",
+      "cover": "https://i.scdn.co/image/ab67616d00001e0288b02d11bab6b274ae95c821",
+      "url": "https://open.spotify.com/track/4kRLyLUbC150Q6zkRhpn1a?si=654906fda4a84942",
+      "year": 2025
+    }
+  ]
+}
