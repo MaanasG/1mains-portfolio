@@ -206,6 +206,8 @@ export default function Portfolio() {
     src.connect(analyser);
     analyser.connect(ctx.destination);
     video.muted = false;
+    video.volume = 1;
+    video.play();
 
     const data = new Uint8Array(analyser.frequencyBinCount);
     let animId;
