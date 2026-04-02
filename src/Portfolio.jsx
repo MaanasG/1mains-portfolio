@@ -173,6 +173,50 @@ function DawScroll() {
   );
 }
 
+function BetaTools() {
+  const items = Array.isArray(DATA.betaTools) ? DATA.betaTools : [];
+  if (!items.length) return null;
+
+  const textStyle = {
+    fontSize: "0.55rem",
+    fontWeight: 300,
+    letterSpacing: "0.06em",
+    color: "rgba(255,255,255,0.35)",
+    textTransform: "lowercase",
+    whiteSpace: "nowrap"
+  };
+
+  return (
+    <div style={{ width: "100%", maxWidth: 520, marginBottom: "1.6rem", textAlign: "center" }}>
+      <div className="yu-gothic" style={{ display: "flex", justifyContent: "center", gap: "30px", flexWrap: "wrap" }}>
+        {items.map((t, idx) => {
+          const label = t.label ?? "";
+          if (t.url) {
+            return (
+              <a
+                key={label || idx}
+                href={t.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  ...textStyle,
+                  textDecoration: "none",
+                  transition: "color 0.2s ease"
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,220,150,0.9)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.35)"; }}
+              >
+                {label}
+              </a>
+            );
+          }
+          return <span key={label || idx} style={textStyle}>{label}</span>;
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function Portfolio() {
   const [count, setCount] = useState(0);
   const [waveform, setWaveform] = useState(new Array(32).fill(0));
@@ -536,7 +580,7 @@ export default function Portfolio() {
 
         <div className="divider" style={{ marginBottom: ".5rem" }} />
 
-        <div className="stats-row" style={{ width: "100%", maxWidth: 700, marginBottom: "2.5rem" }}>
+        <div className="stats-row" style={{ width: "100%", maxWidth: 700, marginBottom: "0.8rem" }}>
           <div style={{ textAlign: "center", flex: "0 0 auto", padding: "0 28px" }}>
             <div className="section-label" style={{ marginBottom: 6 }}>total streams</div>
             <div className="yu-gothic" style={{
@@ -558,6 +602,8 @@ export default function Portfolio() {
             <Productions />
           </div>
         </div>
+
+        <BetaTools />
 
         <div style={{ width: "100%", maxWidth: 520, marginBottom: ".5rem" }}>
           <div className="section-label" style={{ textAlign: "center", marginBottom: "1rem" }}>tools</div>

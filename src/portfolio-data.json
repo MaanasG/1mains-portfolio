@@ -30,6 +30,10 @@
     { "name": "Ableton", "logo": "https://preview.redd.it/am-i-the-only-one-who-didnt-know-the-ableton-logo-is-a-mix-v0-meg6nawssnb01.jpg?auto=webp&s=d9920b8989c36dd465be586f22604cc3c87c9961" },
     { "name": "Logic Pro", "logo": "https://upload.wikimedia.org/wikipedia/commons/1/10/Logicpro-icon.png" }
   ],
+  "betaTools": [
+    { "label": "beatstars -> youtube conversion tool (beta)", "url": "https://typebeat-generator.onrender.com/" },
+    { "label": "one-shot ai editor (beta)", "url": "https://www.maanasgopi.com/" }
+  ],
   "productions": [
     {
       "id": 1,
