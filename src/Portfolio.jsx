@@ -41,97 +41,88 @@ function fmtStreams(n) {
   return n.toString();
 }
 
-function ProdCard({ prod, size = 96 }) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div
-      className="flex flex-col items-center flex-shrink-0"
-      style={{ width: `${size}px`, gap: "6px" }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <a
-        href={prod.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="relative block rounded-xl overflow-hidden cursor-pointer"
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-          transition: "transform 0.3s ease",
-          transform: hovered ? "scale(1.07)" : "scale(1)",
-        }}
-      >
-        <img
-          src={prod.cover}
-          alt={prod.title}
-          className="w-full h-full object-cover"
-          onError={(e) => { e.target.src = "https://via.placeholder.com/96?text=♪"; }}
-        />
-      </a>
-
-      <div style={{
-        height: "2.2rem",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "2px",
-        opacity: hovered ? 1 : 0,
-        transform: hovered ? "translateY(0)" : "translateY(4px)",
-        transition: "opacity 0.2s ease, transform 0.2s ease",
-      }}>
-        <p className="yu-gothic" style={{ fontSize: "0.55rem", fontWeight: 300, letterSpacing: "0.08em", color: "rgba(255,255,255,0.9)", textAlign: "center", lineHeight: 1.3, whiteSpace: "nowrap" }}>
-          {prod.artist}
-        </p>
-        <p className="yu-gothic" style={{ fontSize: "0.5rem", fontWeight: 300, letterSpacing: "0.06em", color: "rgba(251,191,36,0.7)", textAlign: "center", lineHeight: 1.3, whiteSpace: "nowrap" }}>
-          {prod.title}
-        </p>
-      </div>
-    </div>
-  );
-}
-
 function Productions() {
-  const [idx, setIdx] = useState(0);
-  const [perPage, setPerPage] = useState(4);
-  const [cardSize, setCardSize] = useState(96);
-  const containerRef = useRef(null);
   const prods = DATA.productions;
-  const max = Math.max(0, prods.length - perPage);
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const stripRef = useRef(null);
+  const prod = prods[idx];
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(([entry]) => {
-      const w = entry.contentRect.width;
-      const available = w - 32;
-      const count = Math.max(1, Math.floor(available / (64 + 12))); 
-      const size = Math.min(96, Math.floor((available - count * 12) / count));
-      setPerPage(count);
-      setCardSize(size);
-      setIdx(i => Math.min(i, Math.max(0, prods.length - count)));
-    });
-    ro.observe(el);
+    if (paused) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => setIdx(n => (n + 1) % prods.length), 5200);
+    return () => clearInterval(id);
+  }, [paused, idx, prods.length]);
+
+  useEffect(() => {
+    const strip = stripRef.current;
+    const el = strip?.children[idx];
+    if (!strip || !el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const left = el.offsetLeft - (strip.clientWidth - el.offsetWidth) / 2;
+    strip.scrollTo({ left: Math.max(0, left), behavior: reduce ? "auto" : "smooth" });
+  }, [idx]);
+
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const mark = () => strip.classList.toggle("is-overflow", strip.scrollWidth > strip.clientWidth + 2);
+    mark();
+    const ro = new ResizeObserver(mark);
+    ro.observe(strip);
     return () => ro.disconnect();
   }, [prods.length]);
 
-  return (
-    <div ref={containerRef} className="flex items-start gap-3 w-full mx-auto">
-      <button onClick={() => setIdx(i => Math.max(0, i - 1))} disabled={idx === 0}
-        className="text-white/40 hover:text-white/80 transition-colors text-xl disabled:opacity-20 flex-shrink-0 select-none"
-        style={{ marginTop: `${cardSize * 0.4}px` }}>‹</button>
+  const hold = () => setPaused(true);
+  const release = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false);
+  };
 
-      <div className="flex gap-3 flex-1" style={{ overflow: "hidden", padding: "4px 2px" }}>
-        {prods.slice(idx, idx + perPage).map(p => (
-          <ProdCard key={p.id} prod={p} size={cardSize} />
+  return (
+    <div
+      className="prod-spotlight"
+      onMouseEnter={hold}
+      onMouseLeave={release}
+      onFocus={hold}
+      onBlur={release}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowRight") { e.preventDefault(); setIdx(n => (n + 1) % prods.length); }
+        if (e.key === "ArrowLeft") { e.preventDefault(); setIdx(n => (n - 1 + prods.length) % prods.length); }
+      }}
+    >
+      <a
+        className="prod-feature"
+        href={prod.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span key={prod.id} className="prod-feature-inner yu-gothic">
+          <span className="prod-feature-art">
+            <img src={prod.cover} alt="" />
+          </span>
+          <span className="prod-feature-copy">
+            <span className="prod-feature-artist">{prod.artist}</span>
+            <span className="prod-feature-title">{prod.title}</span>
+            <span className="prod-feature-year">{prod.year}</span>
+          </span>
+        </span>
+      </a>
+
+      <div className="prod-index" ref={stripRef} role="listbox" aria-label="productions">
+        {prods.map((p, i) => (
+          <button
+            key={p.id}
+            type="button"
+            role="option"
+            aria-selected={i === idx}
+            aria-label={`${p.artist}, ${p.title}`}
+            onClick={() => setIdx(i)}
+          >
+            <img src={p.cover} alt="" />
+          </button>
         ))}
       </div>
-
-      <button onClick={() => setIdx(i => Math.min(max, i + 1))} disabled={idx >= max}
-        className="text-white/40 hover:text-white/80 transition-colors text-xl disabled:opacity-20 flex-shrink-0 select-none"
-        style={{ marginTop: `${cardSize * 0.4}px` }}>›</button>
     </div>
   );
 }
@@ -426,8 +417,16 @@ export default function Portfolio() {
         }
 
         .stats-row {
+          --cover: 92px;
+          display: flex;
+          align-items: flex-start;
+        }
+
+        .stream-count {
+          height: var(--cover);
           display: flex;
           align-items: center;
+          justify-content: center;
         }
 
         @media (max-width: 520px) {
@@ -440,6 +439,10 @@ export default function Portfolio() {
             padding-left: 0 !important;
             width: 100%;
           }
+          .stats-row > div:last-child .section-label { text-align: center; }
+          .stream-count { height: auto; }
+          .prod-feature-inner { width: 100%; justify-content: center; }
+          .prod-feature-copy { flex: 0 1 auto; max-width: calc(100% - 106px); }
           .stats-divider-v { display: none; }
           .stats-divider-h {
             display: block !important;
@@ -447,6 +450,125 @@ export default function Portfolio() {
             height: 1px;
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
           }
+        }
+
+        .prod-spotlight {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          min-width: 0;
+          outline: none;
+        }
+
+        .prod-feature {
+          display: block;
+          text-decoration: none;
+          min-width: 0;
+        }
+
+        .prod-feature-inner {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          min-width: 0;
+          animation: prodIn 560ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .prod-feature-art {
+          width: var(--cover);
+          height: var(--cover);
+          flex-shrink: 0;
+          border-radius: 14px;
+          overflow: hidden;
+          box-shadow: 0 0 28px rgba(255, 150, 30, 0.16);
+        }
+
+        .prod-feature-art img,
+        .prod-index img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .prod-feature-copy {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          min-width: 0;
+        }
+
+        .prod-feature-artist {
+          font-size: 0.84rem;
+          font-weight: 300;
+          letter-spacing: 0.02em;
+          color: rgba(255,255,255,0.92);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .prod-feature-title {
+          font-size: 0.68rem;
+          font-weight: 300;
+          letter-spacing: 0.08em;
+          color: rgba(251,191,36,0.78);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .prod-feature-year {
+          margin-top: 2px;
+          font-size: 0.55rem;
+          font-weight: 300;
+          letter-spacing: 0.16em;
+          color: rgba(255,255,255,0.32);
+        }
+
+        .prod-index {
+          display: flex;
+          gap: 8px;
+          overflow-x: auto;
+          scrollbar-width: none;
+          padding: 2px 1px 4px;
+          min-width: 0;
+        }
+
+        .prod-index::-webkit-scrollbar { display: none; }
+
+        .prod-index.is-overflow {
+          mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+        }
+
+        .prod-index button {
+          flex: 0 0 36px;
+          width: 36px;
+          height: 36px;
+          padding: 0;
+          border: 0;
+          border-radius: 8px;
+          overflow: hidden;
+          cursor: pointer;
+          opacity: 0.38;
+          background: transparent;
+          transition: opacity 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+        }
+
+        .prod-index button:hover { opacity: 0.85; }
+
+        .prod-index button[aria-selected="true"] {
+          opacity: 1;
+          box-shadow: 0 0 0 1px rgba(251,191,36,0.75), 0 0 14px rgba(255,160,40,0.4);
+        }
+
+        @keyframes prodIn {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .prod-feature-inner { animation: none; }
         }
 
         .section-label {
@@ -582,8 +704,8 @@ export default function Portfolio() {
 
         <div className="stats-row" style={{ width: "100%", maxWidth: 700, marginBottom: "0.8rem" }}>
           <div style={{ textAlign: "center", flex: "0 0 auto", padding: "0 28px" }}>
-            <div className="section-label" style={{ marginBottom: 6 }}>total streams</div>
-            <div className="yu-gothic" style={{
+            <div className="section-label" style={{ marginBottom: "0.85rem" }}>total streams</div>
+            <div className="stream-count yu-gothic" style={{
               fontSize: "1.8rem",
               fontWeight: 300,
               letterSpacing: "-0.05em",
@@ -597,8 +719,8 @@ export default function Portfolio() {
           <div className="stats-divider-v" style={{ width: "1px", alignSelf: "stretch", background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent)", flexShrink: 0 }} />
           <div className="stats-divider-h" style={{ display: "none" }} />
 
-          <div style={{ flex: 1, paddingLeft: "24px" }}>
-            <div className="section-label" style={{ textAlign: "center", marginBottom: "1rem" }}>productions</div>
+          <div style={{ flex: 1, minWidth: 0, paddingLeft: "24px" }}>
+            <div className="section-label" style={{ marginBottom: "0.85rem" }}>productions</div>
             <Productions />
           </div>
         </div>

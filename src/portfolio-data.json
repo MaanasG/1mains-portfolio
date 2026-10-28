@@ -1,6 +1,6 @@
 {
   "artist": "1mains",
-  "streamCount": 5700000,
+  "streamCount": 6700000,
   "socials": [
     { "name": "Instagram", "url": "https://instagram.com/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" },
     { "name": "Twitch", "url": "https://twitch.tv/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/twitch.svg" },
@@ -35,6 +35,14 @@
     { "label": "one-shot ai editor (beta)", "url": "https://github.com/MaanasG/textaudiomvp" }
   ],
   "productions": [
+    {
+      "id": 11,
+      "title": "Lefty",
+      "artist": "Autumn!",
+      "cover": "https://i.scdn.co/image/ab67616d00001e024e4f40c32dd220b969d5d633",
+      "url": "https://open.spotify.com/track/0AzgAXgmSE9YVXwl9jubmE?si=d22e182ac544456d",
+      "year": 2026
+    },
     {
       "id": 1,
       "title": "Hold On",
@@ -106,6 +114,14 @@
       "cover": "https://i.scdn.co/image/ab67616d00001e0288b02d11bab6b274ae95c821",
       "url": "https://open.spotify.com/track/4kRLyLUbC150Q6zkRhpn1a?si=654906fda4a84942",
       "year": 2025
+    },
+    {
+      "id": 10,
+      "title": "LOST IN YOU",
+      "artist": "Leondis & Subarctic",
+      "cover": "https://i.scdn.co/image/ab67616d00001e0285c366cb1023893375c23680",
+      "url": "https://open.spotify.com/track/5t8DLZqVZl27BgMqnZfPEc",
+      "year": 2026
     }
   ]
 }
