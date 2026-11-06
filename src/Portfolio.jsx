@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import SamplePlayer from "./components/SamplePlayer";
+import { warmTracks } from "./components/samplePeaks";
 import DATA from "./portfolio-data.json";
 import SAMPLES from "virtual:samples";
 import BEATS from "virtual:beats";
@@ -390,23 +392,29 @@ function ReelColumns({ items }) {
     for (let step = 0; picked.length < 4; step += 1) picked.push(files[(col + step * 3) % files.length]);
     return picked;
   });
+  const eagerSrc = new Set();
 
   return (
     <div className="reel-columns" ref={ref} aria-label="reels">
       {columns.map((col, i) => (
         <div className="reel-col" key={i}>
           <div className="reel-track" style={{ "--reel-dur": `${48 + i * 12}s`, "--reel-delay": `${-i * 8}s` }}>
-            {[...col, ...col].map((item, j) => (
-              <video
-                key={`${item.id}-${j}`}
-                src={item.src}
-                muted
-                loop
-                playsInline
-                preload="none"
-                aria-label={item.name}
-              />
-            ))}
+            {[...col, ...col].map((item, j) => {
+              const lead = !eagerSrc.has(item.src);
+              if (lead) eagerSrc.add(item.src);
+              return (
+                <video
+                  key={`${item.id}-${j}`}
+                  src={item.src}
+                  muted
+                  loop
+                  playsInline
+                  preload={lead ? "auto" : "metadata"}
+                  aria-label={item.name}
+                  onLoadedData={(e) => e.currentTarget.classList.add("is-ready")}
+                />
+              );
+            })}
           </div>
         </div>
       ))}
@@ -558,11 +566,131 @@ function CursorGlow() {
 
 const HERO_VIDEO_START = 2;
 
+function whenHeroReady(video) {
+  return new Promise(resolve => {
+    if (!video) { resolve(); return; }
+    const check = () => {
+      if (video.readyState >= 2 && video.currentTime >= HERO_VIDEO_START - 0.5) {
+        video.removeEventListener("loadeddata", check);
+        video.removeEventListener("canplay", check);
+        video.removeEventListener("seeked", check);
+        resolve();
+      }
+    };
+    video.addEventListener("loadeddata", check);
+    video.addEventListener("canplay", check);
+    video.addEventListener("seeked", check);
+    check();
+  });
+}
+
+function whenReelReady(video) {
+  return new Promise(resolve => {
+    if (video.readyState >= 2) { resolve(); return; }
+    const finish = () => {
+      video.removeEventListener("loadeddata", finish);
+      video.removeEventListener("error", finish);
+      resolve();
+    };
+    video.addEventListener("loadeddata", finish);
+    video.addEventListener("error", finish);
+  });
+}
+
+function BootLoader({ heroRef, onDone }) {
+  const [progress, setProgress] = useState(0);
+  const [leaving, setLeaving] = useState(false);
+
+  useEffect(() => {
+    let dead = false;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const root = document.documentElement;
+    const body = document.body;
+    const previousRoot = root.style.overflow;
+    const previousBody = body.style.overflow;
+    root.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    const app = document.getElementById("root");
+    app?.setAttribute("inert", "");
+    const unlock = () => {
+      root.style.overflow = previousRoot;
+      body.style.overflow = previousBody;
+      app?.removeAttribute("inert");
+    };
+
+    const sampleSrcs = SAMPLES.flatMap(group => (group.tracks || []).map(track => track.src));
+    const reelVideos = [...document.querySelectorAll(".reel-columns video")];
+    const leadReels = [];
+    const seen = new Set();
+    reelVideos.forEach(video => {
+      const src = video.getAttribute("src");
+      if (!src || seen.has(src)) return;
+      seen.add(src);
+      leadReels.push(video);
+    });
+
+    let hero = 0;
+    let reels = 0;
+    let audio = 0;
+    const reelTotal = Math.max(leadReels.length, 1);
+    const audioTotal = Math.max(sampleSrcs.length, 1);
+    const publish = () => {
+      if (!dead) setProgress(Math.min(1, hero * 0.4 + (reels / reelTotal) * 0.3 + (audio / audioTotal) * 0.3));
+    };
+    if (!leadReels.length) reels = reelTotal;
+    if (!sampleSrcs.length) audio = audioTotal;
+    publish();
+
+    const finish = () => {
+      if (dead) return;
+      dead = true;
+      setProgress(1);
+      setLeaving(true);
+      leaveTimer = window.setTimeout(() => {
+        unlock();
+        onDone();
+      }, reduce ? 0 : 680);
+    };
+
+    let leaveTimer = 0;
+    const timeout = window.setTimeout(finish, 12000);
+    const warming = warmTracks(sampleSrcs, () => { audio += 1; publish(); });
+
+    Promise.all([
+      whenHeroReady(heroRef.current).then(() => { hero = 1; publish(); }),
+      Promise.all(leadReels.map(video => whenReelReady(video).then(() => { reels += 1; publish(); }))),
+      warming,
+    ]).then(() => {
+      window.clearTimeout(timeout);
+      finish();
+    });
+
+    return () => {
+      dead = true;
+      warming.cancel?.();
+      window.clearTimeout(timeout);
+      window.clearTimeout(leaveTimer);
+      unlock();
+    };
+  }, [heroRef, onDone]);
+
+  return createPortal(
+    <div className={leaving ? "boot is-leaving" : "boot"} role="status" aria-live="polite" aria-label="Loading">
+      <img className="boot-mark" src="/favicon.svg" alt="" />
+      <p className="boot-name">1mains</p>
+      <span className="boot-line" aria-hidden="true"><span style={{ width: `${Math.round(progress * 100)}%` }} /></span>
+    </div>,
+    document.body,
+  );
+}
+
 export default function Portfolio() {
   const [count, setCount] = useState(0);
   const [activeProd, setActiveProd] = useState(DATA.productions[0]);
   const heroRef = useRef(null);
   const [catalog, setCatalog] = useState("samples");
+  const [booting, setBooting] = useState(true);
+  const finishBoot = useCallback(() => setBooting(false), []);
   const store = DATA.links.find(l => /store/i.test(l.label));
   const archive = DATA.links.find(l => /telegram/i.test(l.label));
   useReveal();
@@ -605,6 +733,7 @@ export default function Portfolio() {
 
   return (
     <>
+      {booting && <BootLoader heroRef={heroRef} onDone={finishBoot} />}
       <CursorGlow />
       <header className="topbar" id="top">
         <div className="topbar-left">

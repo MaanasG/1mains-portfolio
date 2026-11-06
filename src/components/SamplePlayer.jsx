@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { decodeTrack } from "./samplePeaks";
 
 function fmtTime(s) {
   if (!Number.isFinite(s) || s < 0) s = 0;
@@ -49,23 +51,6 @@ function PauseIcon() {
   );
 }
 
-function peaksFromBuffer(buffer, bars = 96) {
-  const data = buffer.getChannelData(0);
-  const block = Math.max(1, Math.floor(data.length / bars));
-  const peaks = [];
-  for (let i = 0; i < bars; i++) {
-    let max = 0;
-    const start = i * block;
-    for (let j = 0; j < block; j += 16) {
-      const v = Math.abs(data[start + j] || 0);
-      if (v > max) max = v;
-    }
-    peaks.push(max);
-  }
-  const top = Math.max(...peaks, 0.01);
-  return peaks.map(p => Math.max(0.06, p / top));
-}
-
 const WASHES = [
   "rgba(255, 168, 48, 0.12)",
   "rgba(255, 104, 32, 0.1)",
@@ -87,24 +72,6 @@ function trackMeta(name) {
   let title = name.replace(/!+/g, " ").replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
   title = title.replace(/^1mains\s*[-–—]\s*/i, "").trim();
   return { title: title || name, tags: tags.slice(0, 4) };
-}
-
-const peakCache = new Map();
-let sharedAudio;
-
-function audioContext() {
-  if (!sharedAudio) sharedAudio = new AudioContext();
-  return sharedAudio;
-}
-
-function decodeTrack(src) {
-  if (peakCache.has(src)) return peakCache.get(src);
-  const job = fetch(src)
-    .then(res => res.arrayBuffer())
-    .then(buf => audioContext().decodeAudioData(buf.slice(0)))
-    .then(audio => ({ peaks: peaksFromBuffer(audio), duration: audio.duration }));
-  peakCache.set(src, job);
-  return job;
 }
 
 export default function SamplePlayer({ groups = [], empty = "Drop audio files into the samples folder." }) {
@@ -268,7 +235,7 @@ export default function SamplePlayer({ groups = [], empty = "Drop audio files in
                     {tags.map(tag => <span key={tag}>{tag}</span>)}
                   </div>
                   <canvas
-                    className="sample-wave"
+                    className={track.peaks || decoded[track.src]?.peaks ? "sample-wave is-drawn" : "sample-wave"}
                     data-id={track.id}
                     role="slider"
                     tabIndex={0}
@@ -307,7 +274,7 @@ export default function SamplePlayer({ groups = [], empty = "Drop audio files in
         onEnded={() => setPlaying(false)}
       />
 
-      {current && (
+      {current && createPortal(
         <div className="now-bar" role="region" aria-label="now playing">
           <button
             type="button"
@@ -325,7 +292,8 @@ export default function SamplePlayer({ groups = [], empty = "Drop audio files in
           </div>
           <div className="now-time">{fmtTime(time)}</div>
           <button type="button" className="now-close" aria-label="Stop" onClick={stop}>×</button>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

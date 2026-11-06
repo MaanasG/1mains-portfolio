@@ -35,7 +35,7 @@ function publicSrc(prefix, rel) {
   return `${prefix}/${rel.split(/[\\/]/).map(encodeURIComponent).join("/")}`;
 }
 
-function scanSamples(dir, prefix = "/samples", fallbackGroup = "demos") {
+function scanSamples(dir, prefix = "/samples", fallbackGroup = "samples") {
   const groups = new Map();
   const add = (group, track) => {
     if (!groups.has(group)) groups.set(group, []);

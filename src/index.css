@@ -55,6 +55,66 @@ body::after {
 
 .cursor-glow.is-on { opacity: 1; }
 
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #000;
+  transition: opacity 0.7s ease;
+}
+
+.boot.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boot-mark {
+  width: 54px;
+  height: 54px;
+  animation: bootGlow 2.4s ease-in-out infinite;
+}
+
+.boot-name {
+  margin: 0;
+  font-family: var(--wordmark);
+  font-size: 1.65rem;
+  font-weight: 300;
+  letter-spacing: -0.08em;
+  line-height: 1;
+  color: #fff;
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.75),
+    0 0 18px rgba(255, 170, 50, 0.45);
+}
+
+.boot-line {
+  display: block;
+  width: min(148px, 36vw);
+  height: 1px;
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.boot-line > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #ffb14a;
+  box-shadow: 0 0 12px rgba(255, 150, 40, 0.85);
+  transition: width 0.35s ease;
+}
+
+@keyframes bootGlow {
+  0%, 100% { filter: saturate(0.86) brightness(0.86) drop-shadow(0 0 8px rgba(255, 150, 32, 0.35)); }
+  50% { filter: saturate(1) brightness(1.05) drop-shadow(0 0 18px rgba(255, 140, 24, 0.8)); }
+}
+
 :focus-visible {
   outline: 1px solid var(--amber);
   outline-offset: 3px;
@@ -792,6 +852,9 @@ body::after {
   .hero-copy { animation: none !important; }
   .about-photo-link:hover { transform: none; }
   .daw-track { animation: none; }
+  .boot-mark,
+  .sample-wave,
+  .reel-track video { animation: none; }
 }
 
 .tools-layout {
@@ -1045,11 +1108,11 @@ body.player-open { padding-bottom: 92px; }
 .catalog-switch button:hover { color: var(--amber); }
 
 .sample-panel {
-  --edge-fade: 44px;
-  margin-top: 22px;
+  --edge-fade: 28px;
+  margin-top: 10px;
   max-width: 720px;
   max-height: 340px;
-  padding: var(--edge-fade) 12px var(--edge-fade) 2px;
+  padding: 0 12px var(--edge-fade) 2px;
   overflow-x: hidden;
   overflow-y: auto;
   background: transparent;
@@ -1057,15 +1120,13 @@ body.player-open { padding-bottom: 92px; }
   scrollbar-width: none;
   -webkit-mask-image: linear-gradient(
     to bottom,
-    transparent 0,
-    #000 var(--edge-fade),
+    #000 0,
     #000 calc(100% - var(--edge-fade)),
     transparent 100%
   );
   mask-image: linear-gradient(
     to bottom,
-    transparent 0,
-    #000 var(--edge-fade),
+    #000 0,
     #000 calc(100% - var(--edge-fade)),
     transparent 100%
   );
@@ -1231,6 +1292,14 @@ body.player-open { padding-bottom: 92px; }
   display: block;
   cursor: pointer;
   touch-action: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 156, 48, 0.28), transparent);
+  background-size: 220% 100%;
+  animation: bootSheen 1.5s ease-in-out infinite;
+}
+
+.sample-wave.is-drawn {
+  background: none;
+  animation: none;
 }
 
 .sample-empty,
@@ -1346,9 +1415,27 @@ body.player-open { padding-bottom: 92px; }
   aspect-ratio: 9 / 16;
   object-fit: cover;
   border-radius: 8px;
-  background: #141414;
+  background: linear-gradient(100deg, #141414 32%, rgba(255, 150, 40, 0.2) 50%, #141414 68%);
+  background-size: 220% 100%;
+  animation: bootSheen 1.8s ease-in-out infinite;
   display: block;
   pointer-events: none;
+}
+
+.reel-track video.is-ready {
+  background: #141414;
+  animation: none;
+}
+
+@keyframes bootSheen {
+  from { background-position: 120% 0; }
+  to { background-position: -120% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-mark,
+  .sample-wave,
+  .reel-track video { animation: none; }
 }
 
 @keyframes reelFall {
@@ -1358,7 +1445,8 @@ body.player-open { padding-bottom: 92px; }
 
 .sample-more {
   display: inline-block;
-  margin-top: 22px;
+  margin-top: 16px;
+  margin-bottom: 4px;
   color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
   font-family: var(--display);
