@@ -1,0 +1,2 @@
+# One Instagram reel link per line.
+# Video files dropped in this folder show up in the grid too.

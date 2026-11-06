@@ -1,39 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import WaveformVisualization from "./components/WaveformVisualization";
-import DATA from './portfolio-data.json';
-
-const SocialIcons = {
-  instagram: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-    </svg>
-  ),
-  twitch: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-      <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
-    </svg>
-  ),
-  youtube: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-      <path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/>
-    </svg>
-  ),
-  genius: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 4.5c.828 0 1.5.672 1.5 1.5S12.828 7.5 12 7.5 10.5 6.828 10.5 6s.672-1.5 1.5-1.5zm3.75 14.25h-7.5v-1.5h3v-6h-3v-1.5h4.5v7.5h3v1.5z"/>
-    </svg>
-  ),
-  telegram: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-    </svg>
-  ),
-  store: (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-      <path d="M12 3L2 9v12h7v-7h6v7h7V9L12 3zm0 2.236L20 10v9h-3v-7H7v7H4V10l8-4.764z"/>
-    </svg>
-  ),
-};
+import SamplePlayer from "./components/SamplePlayer";
+import DATA from "./portfolio-data.json";
+import SAMPLES from "virtual:samples";
+import BEATS from "virtual:beats";
+import REELS from "virtual:reels";
 
 function fmtStreams(n) {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
@@ -41,19 +11,178 @@ function fmtStreams(n) {
   return n.toString();
 }
 
-function Productions() {
+function youtubeId(url) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+    let id = null;
+    if (host === "youtu.be") id = parsed.pathname.slice(1);
+    else if (host.endsWith("youtube.com") || host.endsWith("youtube-nocookie.com")) {
+      if (parsed.pathname.startsWith("/embed/") || parsed.pathname.startsWith("/shorts/")) id = parsed.pathname.split("/")[2];
+      else id = parsed.searchParams.get("v");
+    }
+    return id && /^[\w-]{11}$/.test(id) ? id : null;
+  } catch {
+    return null;
+  }
+}
+
+function loadYouTubeAPI() {
+  if (window.YT?.Player) return Promise.resolve(window.YT);
+  return new Promise(resolve => {
+    const previous = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      previous?.();
+      resolve(window.YT);
+    };
+    if (!document.getElementById("yt-iframe-api")) {
+      const script = document.createElement("script");
+      script.id = "yt-iframe-api";
+      script.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(script);
+    }
+  });
+}
+
+function WorkBackdrop({ item }) {
+  const hostRef = useRef(null);
+  const playerRef = useRef(null);
+  const fileRef = useRef(null);
+  const rootRef = useRef(null);
+  const nearRef = useRef(false);
+  const [playing, setPlaying] = useState(false);
+  const [armed, setArmed] = useState(false);
+  const [near, setNear] = useState(false);
+  const yt = item ? youtubeId(item.video) : null;
+  const portrait = Boolean(item?.video && /\/shorts\//.test(item.video));
+  const file = Boolean(item?.video && !yt && (item.video.startsWith("/") || /\.(mp4|webm)(\?|$)/i.test(item.video)));
+  const itemKey = item?.id || item?.video || "";
+  const [seenKey, setSeenKey] = useState(itemKey);
+  if (itemKey !== seenKey) {
+    setSeenKey(itemKey);
+    setPlaying(false);
+  }
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return undefined;
+    const io = new IntersectionObserver(([entry]) => {
+      const visible = entry.isIntersecting;
+      nearRef.current = visible;
+      setNear(visible);
+      if (visible) setArmed(true);
+    }, { rootMargin: "240px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!armed || !yt) return undefined;
+    let dead = false;
+    loadYouTubeAPI().then(() => {
+      if (dead || !hostRef.current || !window.YT?.Player) return;
+      playerRef.current?.destroy?.();
+      playerRef.current = new window.YT.Player(hostRef.current, {
+        videoId: yt,
+        playerVars: {
+          autoplay: 1,
+          mute: 1,
+          controls: 0,
+          rel: 0,
+          loop: 1,
+          playlist: yt,
+          modestbranding: 1,
+          playsinline: 1,
+          iv_load_policy: 3,
+          disablekb: 1,
+          fs: 0,
+          cc_load_policy: 0,
+        },
+        events: {
+          onReady: (event) => {
+            event.target.mute();
+            if (nearRef.current) event.target.playVideo();
+          },
+          onStateChange: (event) => {
+            if (event.data === window.YT.PlayerState.PLAYING) setPlaying(true);
+            if (event.data === window.YT.PlayerState.ENDED) event.target.playVideo();
+          },
+        },
+      });
+    });
+    return () => {
+      dead = true;
+      playerRef.current?.destroy?.();
+      playerRef.current = null;
+    };
+  }, [armed, yt]);
+
+  useEffect(() => {
+    nearRef.current = near;
+    const player = playerRef.current;
+    if (player?.playVideo) {
+      if (near) player.playVideo();
+      else player.pauseVideo?.();
+    }
+    const video = fileRef.current;
+    if (!video) return;
+    if (near) video.play().catch(() => {});
+    else video.pause();
+  }, [near]);
+
+  if (!item) return null;
+
+  return (
+    <div ref={rootRef} className={`work-bg${portrait ? " is-portrait" : ""}${item?.more ? " is-profile" : ""}`} aria-hidden="true">
+      {(yt || file) && armed && (
+        <div className="work-bg-media">
+          {yt && (
+            <div className="work-bg-yt" key={yt}>
+              <div ref={hostRef} />
+            </div>
+          )}
+          {file && (
+            <video
+              ref={fileRef}
+              key={item.video}
+              src={item.video}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              onPlaying={() => setPlaying(true)}
+            />
+          )}
+        </div>
+      )}
+      {item.cover && <img className={playing ? "is-hidden" : ""} src={item.cover} alt="" />}
+      <div className="work-bg-fade" />
+    </div>
+  );
+}
+
+const geniusProfile = DATA.socials.find(s => /genius/i.test(s.name));
+const moreProduction = geniusProfile?.image
+  ? { id: "more", more: true, url: geniusProfile.url, cover: geniusProfile.image }
+  : null;
+const productionItems = moreProduction ? [...DATA.productions, moreProduction] : DATA.productions;
+
+function Productions({ onActive }) {
   const prods = DATA.productions;
+  const items = productionItems;
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const stripRef = useRef(null);
-  const prod = prods[idx];
+  const prod = items[idx];
 
   useEffect(() => {
     if (paused) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => setIdx(n => (n + 1) % prods.length), 5200);
+    const id = setInterval(() => setIdx(n => (n + 1) % items.length), 5200);
     return () => clearInterval(id);
-  }, [paused, idx, prods.length]);
+  }, [paused, idx, items.length]);
 
   useEffect(() => {
     const strip = stripRef.current;
@@ -72,7 +201,11 @@ function Productions() {
     const ro = new ResizeObserver(mark);
     ro.observe(strip);
     return () => ro.disconnect();
-  }, [prods.length]);
+  }, [items.length]);
+
+  useEffect(() => {
+    onActive?.(items[idx]);
+  }, [idx, onActive, items]);
 
   const hold = () => setPaused(true);
   const release = (e) => {
@@ -81,45 +214,74 @@ function Productions() {
 
   return (
     <div
-      className="prod-spotlight"
+      className={`prod-spotlight${paused ? " is-held" : ""}`}
       onMouseEnter={hold}
       onMouseLeave={release}
       onFocus={hold}
       onBlur={release}
       onKeyDown={(e) => {
-        if (e.key === "ArrowRight") { e.preventDefault(); setIdx(n => (n + 1) % prods.length); }
-        if (e.key === "ArrowLeft") { e.preventDefault(); setIdx(n => (n - 1 + prods.length) % prods.length); }
+        if (e.key === "ArrowRight") { e.preventDefault(); setIdx(n => (n + 1) % items.length); }
+        if (e.key === "ArrowLeft") { e.preventDefault(); setIdx(n => (n - 1 + items.length) % items.length); }
       }}
     >
-      <a
-        className="prod-feature"
-        href={prod.url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span key={prod.id} className="prod-feature-inner yu-gothic">
-          <span className="prod-feature-art">
-            <img src={prod.cover} alt="" />
+      <div className="prod-feature-stack">
+        <a
+          key={prod.id}
+          className={`${prod.more ? "prod-feature is-more" : "prod-feature"} is-active`}
+          href={prod.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className="prod-feature-inner">
+            {prod.more ? (
+              <span className="prod-feature-copy">
+                <span className="prod-meta">
+                  <span>genius</span>
+                  <span className="prod-meta-rule" />
+                  <span>credits</span>
+                </span>
+                <span className="prod-more-title">And more!</span>
+                <span className="prod-open">open profile</span>
+              </span>
+            ) : (
+              <>
+                <span className="prod-feature-art">
+                  <span className="prod-feature-shot">
+                    <img src={prod.cover} alt="" decoding="async" />
+                  </span>
+                  <span className="prod-corners" aria-hidden="true" />
+                </span>
+                <span className="prod-feature-copy">
+                  <span className="prod-meta">
+                    <span>{String(idx + 1).padStart(2, "0")} / {String(prods.length).padStart(2, "0")}</span>
+                    <span className="prod-meta-rule" />
+                    <span>production</span>
+                  </span>
+                  <span className="prod-feature-artist">{prod.artist}</span>
+                  <span className="prod-feature-title">{prod.title}</span>
+                  <span className="prod-feature-year">{prod.year}</span>
+                  <span className="prod-open">listen</span>
+                </span>
+              </>
+            )}
           </span>
-          <span className="prod-feature-copy">
-            <span className="prod-feature-artist">{prod.artist}</span>
-            <span className="prod-feature-title">{prod.title}</span>
-            <span className="prod-feature-year">{prod.year}</span>
-          </span>
-        </span>
-      </a>
+        </a>
+      </div>
+      <div className="prod-progress" key={prod.id} />
 
       <div className="prod-index" ref={stripRef} role="listbox" aria-label="productions">
-        {prods.map((p, i) => (
+        {items.map((p, i) => (
           <button
             key={p.id}
             type="button"
             role="option"
+            className={p.more ? "is-more" : undefined}
             aria-selected={i === idx}
-            aria-label={`${p.artist}, ${p.title}`}
+            aria-label={p.more ? "And more on Genius" : `${p.artist}, ${p.title}`}
             onClick={() => setIdx(i)}
           >
-            <img src={p.cover} alt="" />
+            <img src={p.cover} alt="" decoding="async" />
+            {p.more && <span>more</span>}
           </button>
         ))}
       </div>
@@ -128,38 +290,126 @@ function Productions() {
 }
 
 function DawScroll() {
-  const items = [...DATA.daws, ...DATA.daws, ...DATA.daws];
+  const items = [...DATA.daws, ...DATA.daws];
   const ref = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    let x = 0;
-    let animId;
-    const tick = () => {
-      x -= 0.1;
-      if (Math.abs(x) >= el.scrollWidth / 3) x = 0;
-      el.style.transform = `translateX(${x}px)`;
-      animId = requestAnimationFrame(tick);
-    };
-    animId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animId);
+    if (!el) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    const io = new IntersectionObserver(([entry]) => {
+      el.classList.toggle("is-on", entry.isIntersecting);
+    }, { rootMargin: "80px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   return (
-    <div className="w-full overflow-hidden">
-      <div ref={ref} className="flex items-center gap-10 whitespace-nowrap will-change-transform">
-        {items.map((d, i) => (
-          <div key={i} className="flex-shrink-0 flex flex-col items-center gap-1 group">
-            <img
-              src={d.logo} alt={d.name}
-              className="w-8 h-8 object-contain opacity-50 group-hover:opacity-90 transition-opacity duration-200"
-              onError={e => { e.target.style.display = "none"; }}
-            />
-            <span className="text-white/30 text-xs group-hover:text-white/70 transition-colors duration-200">{d.name}</span>
+    <div className={`daw-track flex items-center gap-12 whitespace-nowrap`} ref={ref}>
+      {items.map((d, i) => (
+        <div key={`${d.name}-${i}`} className="flex-shrink-0 flex flex-col items-center gap-2">
+          <img
+            src={d.logo}
+            alt={d.name}
+            className="w-8 h-8 object-contain opacity-55"
+            decoding="async"
+            onError={e => { e.target.style.display = "none"; }}
+          />
+          <span className="text-white/35 text-[0.68rem] tracking-[0.14em] uppercase">{d.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ReelColumns({ items }) {
+  const ref = useRef(null);
+  const files = items.filter(item => item.type === "file");
+
+  useEffect(() => {
+    const root = ref.current;
+    const frame = root?.parentElement;
+    if (!root || !frame) return;
+    const videos = [...root.querySelectorAll("video")];
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let sectionOn = false;
+    let scrolling = false;
+    let scrollTimer = 0;
+
+    const apply = () => {
+      const allow = sectionOn && !scrolling && !motion.matches;
+      videos.forEach(video => {
+        if (allow && video.dataset.on === "1") video.play().catch(() => {});
+        else video.pause();
+      });
+    };
+
+    const clip = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        entry.target.dataset.on = entry.isIntersecting ? "1" : "0";
+      });
+      apply();
+    }, { root: frame, threshold: 0.2, rootMargin: "8% 0px" });
+    videos.forEach(video => clip.observe(video));
+
+    const section = new IntersectionObserver(([entry]) => {
+      sectionOn = entry.isIntersecting;
+      frame.classList.toggle("is-live", sectionOn);
+      apply();
+    }, { threshold: 0.12 });
+    section.observe(frame);
+
+    const onScroll = () => {
+      if (!scrolling) {
+        scrolling = true;
+        apply();
+      }
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(() => {
+        scrolling = false;
+        apply();
+      }, 140);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      clip.disconnect();
+      section.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(scrollTimer);
+      videos.forEach(video => video.pause());
+    };
+  }, [files.length]);
+
+  if (!files.length) {
+    return <p className="reel-empty">Drop clips into the reels folder, or add reel links to reels/links.txt.</p>;
+  }
+
+  const columns = [0, 1, 2].map(col => {
+    const picked = [];
+    for (let step = 0; picked.length < 4; step += 1) picked.push(files[(col + step * 3) % files.length]);
+    return picked;
+  });
+
+  return (
+    <div className="reel-columns" ref={ref} aria-label="reels">
+      {columns.map((col, i) => (
+        <div className="reel-col" key={i}>
+          <div className="reel-track" style={{ "--reel-dur": `${48 + i * 12}s`, "--reel-delay": `${-i * 8}s` }}>
+            {[...col, ...col].map((item, j) => (
+              <video
+                key={`${item.id}-${j}`}
+                src={item.src}
+                muted
+                loop
+                playsInline
+                preload="none"
+                aria-label={item.name}
+              />
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -168,51 +418,174 @@ function BetaTools() {
   const items = Array.isArray(DATA.betaTools) ? DATA.betaTools : [];
   if (!items.length) return null;
 
-  const textStyle = {
-    fontSize: "0.55rem",
-    fontWeight: 300,
-    letterSpacing: "0.06em",
-    color: "rgba(255,255,255,0.35)",
-    textTransform: "lowercase",
-    whiteSpace: "nowrap"
-  };
-
   return (
-    <div style={{ width: "100%", maxWidth: 520, marginBottom: "1.6rem", textAlign: "center" }}>
-      <div className="yu-gothic" style={{ display: "flex", justifyContent: "center", gap: "30px", flexWrap: "wrap" }}>
-        {items.map((t, idx) => {
-          const label = t.label ?? "";
-          if (t.url) {
-            return (
-              <a
-                key={label || idx}
-                href={t.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  ...textStyle,
-                  textDecoration: "none",
-                  transition: "color 0.2s ease"
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "rgba(255,220,150,0.9)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.35)"; }}
-              >
-                {label}
-              </a>
-            );
-          }
-          return <span key={label || idx} style={textStyle}>{label}</span>;
-        })}
-      </div>
+    <div className="beta-row">
+      {items.map((t, idx) => (
+        t.url ? (
+          <a key={t.label || idx} href={t.url} target="_blank" rel="noopener noreferrer">
+            {t.label}
+          </a>
+        ) : (
+          <span key={t.label || idx}>{t.label}</span>
+        )
+      ))}
     </div>
   );
 }
 
+function useReveal() {
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const nodes = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.16, rootMargin: "0px 0px -8% 0px" });
+    nodes.forEach(node => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+}
+
+function CursorGlow() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarse = window.matchMedia("(pointer: coarse)");
+    if (reduce.matches || coarse.matches) return;
+    const ctx = canvas.getContext("2d");
+    const marks = [];
+    let dpr = 1;
+    let raf = 0;
+    let primed = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    const fit = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(window.innerWidth * dpr);
+      canvas.height = Math.round(window.innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    fit();
+
+    const spawn = (x, y) => {
+      const count = 2 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < count; i++) {
+        const hot = Math.random() > 0.65;
+        marks.push({
+          x: x + (Math.random() - 0.5) * 14,
+          y: y + (i - (count - 1) / 2) * 7 + (Math.random() - 0.5) * 4,
+          len: 5 + Math.random() * (hot ? 16 : 9),
+          life: 1,
+          decay: 0.008 + Math.random() * 0.007,
+          hot,
+        });
+      }
+      if (marks.length > 260) marks.splice(0, marks.length - 260);
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.lineCap = "butt";
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = "rgba(255, 140, 32, 0.9)";
+      for (let i = marks.length - 1; i >= 0; i--) {
+        const mark = marks[i];
+        mark.life -= mark.decay;
+        if (mark.life <= 0) {
+          marks.splice(i, 1);
+          continue;
+        }
+        ctx.globalAlpha = mark.life * mark.life;
+        ctx.strokeStyle = mark.hot ? "rgba(255, 244, 220, 0.98)" : "rgba(255, 176, 54, 0.95)";
+        ctx.lineWidth = mark.hot ? 1.6 : 1.15;
+        ctx.beginPath();
+        ctx.moveTo(mark.x - mark.len * 0.5, mark.y);
+        ctx.lineTo(mark.x + mark.len * 0.5, mark.y);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      raf = marks.length ? requestAnimationFrame(draw) : 0;
+    };
+
+    const move = (event) => {
+      const x = event.clientX;
+      const y = event.clientY;
+      canvas.classList.add("is-on");
+      if (!primed) {
+        lastX = x;
+        lastY = y;
+        primed = true;
+        return;
+      }
+      let dx = x - lastX;
+      let dy = y - lastY;
+      let dist = Math.hypot(dx, dy);
+      const gap = 22;
+      while (dist >= gap) {
+        const step = gap / dist;
+        lastX += dx * step;
+        lastY += dy * step;
+        spawn(lastX, lastY);
+        dx = x - lastX;
+        dy = y - lastY;
+        dist = Math.hypot(dx, dy);
+      }
+      if (!raf) raf = requestAnimationFrame(draw);
+    };
+
+    const hide = () => canvas.classList.remove("is-on");
+    window.addEventListener("pointermove", move);
+    window.addEventListener("resize", fit);
+    document.documentElement.addEventListener("mouseleave", hide);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("resize", fit);
+      document.documentElement.removeEventListener("mouseleave", hide);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return <canvas className="cursor-glow" ref={ref} aria-hidden="true" />;
+}
+
+const HERO_VIDEO_START = 2;
+
 export default function Portfolio() {
   const [count, setCount] = useState(0);
-  const [waveform, setWaveform] = useState(new Array(32).fill(0));
-  const [unmuted, setUnmuted] = useState(false);
-  const videoRef = useRef(null);
+  const [activeProd, setActiveProd] = useState(DATA.productions[0]);
+  const heroRef = useRef(null);
+  const [catalog, setCatalog] = useState("samples");
+  const store = DATA.links.find(l => /store/i.test(l.label));
+  const archive = DATA.links.find(l => /telegram/i.test(l.label));
+  useReveal();
+
+  useEffect(() => {
+    const video = heroRef.current;
+    if (!video) return undefined;
+    const cue = () => {
+      if (video.currentTime < 0.35) video.currentTime = HERO_VIDEO_START;
+    };
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.intersectionRatio >= 0.25) video.play().catch(() => {});
+      else video.pause();
+    }, { threshold: [0, 0.25] });
+    video.addEventListener("loadedmetadata", cue);
+    video.addEventListener("seeked", cue);
+    io.observe(video);
+    return () => {
+      video.removeEventListener("loadedmetadata", cue);
+      video.removeEventListener("seeked", cue);
+      io.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const target = DATA.streamCount;
@@ -228,510 +601,161 @@ export default function Portfolio() {
     return () => clearTimeout(id);
   }, []);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !unmuted) return;
-
-    const ctx = new AudioContext();
-    const analyser = ctx.createAnalyser();
-    analyser.fftSize = 256;
-    analyser.smoothingTimeConstant = 0.6;
-
-    const src = ctx.createMediaElementSource(video);
-    src.connect(analyser);
-    analyser.connect(ctx.destination);
-    video.muted = false;
-    video.volume = 1;
-    video.play();
-
-    const data = new Uint8Array(analyser.frequencyBinCount);
-    let animId;
-
-    const update = () => {
-      analyser.getByteFrequencyData(data);
-      const wave = Array.from({ length: 32 }, (_, i) => {
-        const si = Math.floor(Math.pow(i / 32, 1.5) * (data.length * 0.9));
-        const comp = 1 + (i / 32) * 1.4;
-        const scaled = (data[si] / 255) * 0.6;
-        return Math.min(Math.pow(scaled, 1.2) * comp, 0.9);
-      });
-      setWaveform(wave);
-      animId = requestAnimationFrame(update);
-    };
-
-    ctx.resume().then(update);
-    return () => { cancelAnimationFrame(animId); ctx.close(); };
-  }, [unmuted]);
+  const streamsLabel = fmtStreams(count);
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Yu+Gothic+UI:wght@300;400;700&display=swap');
-
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-          background: #000;
-          min-height: 100vh;
-          overflow-x: hidden;
-        }
-
-        .yu-gothic {
-          font-family: 'Yu Gothic UI', 'Yu Gothic', 'YuGothic', 'Hiragino Kaku Gothic ProN', sans-serif;
-        }
-
-        .name-text {
-          font-family: 'Yu Gothic UI', 'Yu Gothic', 'YuGothic', sans-serif;
-          font-size: clamp(3.5rem, 10vw, 7rem);
-          font-weight: 300;
-          letter-spacing: -0.10em;
-          line-height: 1.2;
-          color: #fff;
-          text-shadow:
-            0 0 6px rgba(255,255,255,0.9),
-            0 0 12px rgba(255,200,80,0.6),
-            0 0 28px rgba(255,160,40,0.45),
-            0 0 60px rgba(255,140,20,0.25);
-        }
-
-        .name-one { color: rgba(255,255,255,0.45); }
-
-        .glass-card {
-          background: linear-gradient(135deg,
-            rgba(255,255,255,0.08) 0%,
-            rgba(255,255,255,0.04) 50%,
-            rgba(255,200,80,0.06) 100%
-          );
-          border: 1px solid rgba(255,255,255,0.1);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border-radius: 16px;
-        }
-
-        .video-bg {
-          position: fixed;
-          inset: 0;
-          height: 80vh;
-          z-index: 0;
-          overflow: hidden;
-        }
-
-        .video-bg video {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: top;
-          opacity: 0.7;
-          mix-blend-mode: luminosity;
-          filter: saturate(1.3) brightness(0.75);
-        }
-
-        .video-fade {
-          position: fixed;
-          inset: 0;
-          height: 80vh;
-          z-index: 1;
-          background: linear-gradient(to bottom,
-            transparent 0%,
-            rgba(0,0,0,0.15) 25%,
-            rgba(0,0,0,0.4) 50%,
-            rgba(0,0,0,0.75) 75%,
-            #000 100%
-          );
-        }
-
-        .ambient-glow {
-          position: absolute;
-          top: 15vh;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 500px;
-          height: 300px;
-          background: radial-gradient(ellipse, rgba(230,140,30,0.12) 0%, transparent 70%);
-          z-index: 2;
-          pointer-events: none;
-        }
-
-        .content {
-          position: relative;
-          z-index: 10;
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 0 20px 48px;
-        }
-
-        .social-link {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 6px;
-          text-decoration: none;
-          color: rgba(255,255,255,0.35);
-          transition: transform 0.25s ease;
-        }
-
-        .social-link svg, .social-link img {
-          width: 30px;
-          height: 30px;
-          opacity: 0.5;
-          filter: invert(1) opacity(0.45);
-          transition: all 0.25s ease;
-          animation: iconPulse 5s ease-in-out infinite;
-        }
-
-        .social-link span {
-          font-size: 0.65rem;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          opacity: 0;
-          transform: translateY(6px);
-          transition: all 0.25s ease;
-        }
-
-        .social-link:hover svg, .social-link:hover img {
-          opacity: 1;
-          filter: drop-shadow(0 0 6px rgba(255,180,60,0.7)) drop-shadow(0 0 14px rgba(255,160,40,0.45));
-          color: #fbbf24;
-          transform: scale(1.12);
-        }
-
-        .social-link:hover span {
-          opacity: 1;
-          transform: translateY(0);
-          color: rgba(255,220,150,0.9);
-        }
-
-        .social-link:hover { transform: translateY(-3px); }
-
-        .cta-link svg, .cta-link img {
-          width: 38px !important;
-          height: 38px !important;
-        }
-
-        .divider {
-          width: 40px;
-          height: 1px;
-          background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
-        }
-
-        .stats-row {
-          --cover: 92px;
-          display: flex;
-          align-items: flex-start;
-        }
-
-        .stream-count {
-          height: var(--cover);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        @media (max-width: 520px) {
-          .stats-row {
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-          }
-          .stats-row > div:last-child {
-            padding-left: 0 !important;
-            width: 100%;
-          }
-          .stats-row > div:last-child .section-label { text-align: center; }
-          .stream-count { height: auto; }
-          .prod-feature-inner { width: 100%; justify-content: center; }
-          .prod-feature-copy { flex: 0 1 auto; max-width: calc(100% - 106px); }
-          .stats-divider-v { display: none; }
-          .stats-divider-h {
-            display: block !important;
-            width: 40px;
-            height: 1px;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
-          }
-        }
-
-        .prod-spotlight {
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-          min-width: 0;
-          outline: none;
-        }
-
-        .prod-feature {
-          display: block;
-          text-decoration: none;
-          min-width: 0;
-        }
-
-        .prod-feature-inner {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          min-width: 0;
-          animation: prodIn 560ms cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .prod-feature-art {
-          width: var(--cover);
-          height: var(--cover);
-          flex-shrink: 0;
-          border-radius: 14px;
-          overflow: hidden;
-          box-shadow: 0 0 28px rgba(255, 150, 30, 0.16);
-        }
-
-        .prod-feature-art img,
-        .prod-index img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-
-        .prod-feature-copy {
-          display: flex;
-          flex-direction: column;
-          gap: 3px;
-          min-width: 0;
-        }
-
-        .prod-feature-artist {
-          font-size: 0.84rem;
-          font-weight: 300;
-          letter-spacing: 0.02em;
-          color: rgba(255,255,255,0.92);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .prod-feature-title {
-          font-size: 0.68rem;
-          font-weight: 300;
-          letter-spacing: 0.08em;
-          color: rgba(251,191,36,0.78);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .prod-feature-year {
-          margin-top: 2px;
-          font-size: 0.55rem;
-          font-weight: 300;
-          letter-spacing: 0.16em;
-          color: rgba(255,255,255,0.32);
-        }
-
-        .prod-index {
-          display: flex;
-          gap: 8px;
-          overflow-x: auto;
-          scrollbar-width: none;
-          padding: 2px 1px 4px;
-          min-width: 0;
-        }
-
-        .prod-index::-webkit-scrollbar { display: none; }
-
-        .prod-index.is-overflow {
-          mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
-        }
-
-        .prod-index button {
-          flex: 0 0 36px;
-          width: 36px;
-          height: 36px;
-          padding: 0;
-          border: 0;
-          border-radius: 8px;
-          overflow: hidden;
-          cursor: pointer;
-          opacity: 0.38;
-          background: transparent;
-          transition: opacity 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
-        }
-
-        .prod-index button:hover { opacity: 0.85; }
-
-        .prod-index button[aria-selected="true"] {
-          opacity: 1;
-          box-shadow: 0 0 0 1px rgba(251,191,36,0.75), 0 0 14px rgba(255,160,40,0.4);
-        }
-
-        @keyframes prodIn {
-          from { opacity: 0; transform: translateY(6px); }
-          to { opacity: 1; transform: none; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .prod-feature-inner { animation: none; }
-        }
-
-        .section-label {
-          font-family: 'Yu Gothic UI', 'Yu Gothic', 'YuGothic', sans-serif;
-          font-size: 1rem;
-          font-weight: 300;
-          letter-spacing: -0.05em;
-          text-transform: lowercase;
-          color: rgba(255,255,255,0.3);
-        }
-
-        .horizontal-smear { position: relative; display: inline-block; color: #fff; }
-        .horizontal-smear::after {
-          content: "1";
-          position: absolute;
-          inset: 0;
-          background: repeating-linear-gradient(
-            90deg,
-            rgba(255,255,255,0) 0%,
-            rgba(255,255,255,0.4) 10%,
-            rgba(251,191,36,0.2) 20%
-          );
-          -webkit-background-clip: text;
-          background-clip: text;
-          transform-origin: center;
-          animation: smearX 4s steps(2) infinite;
-          mix-blend-mode: screen;
-          filter: blur(0.4px);
-          pointer-events: none;
-          z-index: -1;
-        }
-
-        @keyframes smearX {
-          0%, 90%, 100% { transform: scaleX(1); opacity: 0; }
-          92% { transform: scaleX(15); opacity: 0.8; color: rgba(251,191,36,0.5); }
-          94% { transform: scaleX(50); opacity: 0.4; filter: brightness(2) contrast(2); }
-          96% { transform: scaleX(5); opacity: 0.9; }
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-6px); }
-        }
-
-        @keyframes iconPulse {
-          0%, 100% { opacity: 0.5; }
-          50% { opacity: 0.6; }
-        }
-
-        .float-anim { animation: float 4s ease-in-out infinite; }
-      `}</style>
-
-      <div className="video-bg">
-        <video ref={videoRef} autoPlay loop playsInline muted>
-          <source src="/bg.mp4" type="video/mp4" />
-        </video>
-      </div>
-      <div className="video-fade" />
-      <div className="ambient-glow" />
-
-      <div className="content">
-        <div className="float-anim" style={{ marginTop: "18vh", marginBottom: "2.5rem", textAlign: "center", position: "relative" }}>
-          {!unmuted && (
-            <div
-              onClick={() => setUnmuted(true)}
-              className="yu-gothic"
-              style={{
-                position: "absolute",
-                top: "-40px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                color: "rgba(255,255,255,0.3)",
-                fontSize: "0.55rem",
-                letterSpacing: "0.3em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                transition: "all 0.4s ease",
-                whiteSpace: "nowrap",
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.color = "rgba(255,200,100,0.7)";
-                e.currentTarget.style.letterSpacing = "0.4em";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.color = "rgba(255,255,255,0.3)";
-                e.currentTarget.style.letterSpacing = "0.3em";
-              }}
-            >
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.8 }}>
-                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
-              </svg>
-              <span>enable audio signal</span>
-            </div>
-          )}
-
-          <div style={{ display: "inline-block", transform: "translateX(0.18em)" }}>
-            <h1 className="name-text" style={{ display: "inline-block" }}>
-              <span className="name-one">
-                <span className="horizontal-smear">1</span>
-              </span>mains
-            </h1>
-            <WaveformVisualization waveform={waveform} isActive={true} color="amber" />
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "8px" }}>
-            <div className="yu-gothic" style={{ padding: "3px 16px", fontSize: "1.5rem", fontWeight: 300, letterSpacing: "-0.05em", color: "rgba(255,255,255,0.4)" }}>
-              producer · artist · sound designer
-            </div>
+      <CursorGlow />
+      <header className="topbar" id="top">
+        <div className="topbar-left">
+          <a className="brand" href="#top" aria-label="1mains">
+            <img src="/favicon.svg" alt="" />
+          </a>
+          <nav className="topnav" aria-label="primary">
+            <a href="#work">Work</a>
+            <a href="#reels">Reels</a>
+            <a href="#about">About</a>
+            {store && (
+              <a href={store.url} target="_blank" rel="noopener noreferrer">Store</a>
+            )}
+            <a href="#contact">Contact</a>
+          </nav>
+        </div>
+        <div className="topbar-right">
+          <div className="topbar-socials">
+            {DATA.socials.map(s => (
+              <a key={s.name} className="icon-btn" href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.name}>
+                <img src={s.icon} alt="" />
+              </a>
+            ))}
           </div>
         </div>
+      </header>
 
-        <div style={{ display: "flex", gap: "10px", marginBottom: "1.5rem", alignItems: "center" }}>
-          {DATA.socials.map(s => (
-            <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="social-link" title={s.name}>
-              <img src={s.icon} alt={s.name} />
+      <section className="hero">
+        <div className="hero-media" aria-hidden="true">
+          <video ref={heroRef} autoPlay loop playsInline muted preload="auto" fetchPriority="high">
+            <source src="/bg.mp4" type="video/mp4" />
+          </video>
+          <div className="hero-shade" />
+        </div>
+        <div className="hero-copy">
+          <h1 className="wordmark">
+            <span className="wordmark-one"><span className="horizontal-smear">1</span></span>
+            <span>mains</span>
+          </h1>
+          <p className="eyebrow">producer · artist · sound designer</p>
+          <a className="scroll-cue" href="#previews">
+            <span className="scroll-rule" />
+            Scroll
+          </a>
+        </div>
+      </section>
+
+      <main>
+        <section className="band preview-band" id="previews">
+          <div className="preview-layout">
+            <div className="preview-main reveal">
+              <p className="band-kicker">previews</p>
+              <div className="catalog-switch" role="tablist" aria-label="preview catalog">
+                <button type="button" role="tab" aria-selected={catalog === "samples"} onClick={() => setCatalog("samples")}>samples</button>
+                <button type="button" role="tab" aria-selected={catalog === "beats"} onClick={() => setCatalog("beats")}>beats</button>
+              </div>
+              <SamplePlayer
+                key={catalog}
+                groups={catalog === "beats" ? BEATS : SAMPLES}
+                empty={catalog === "beats" ? "Drop audio files into the beats folder." : "Drop audio files into the samples folder."}
+              />
+              {(catalog === "beats" ? store : archive) && (
+                <a
+                  className="sample-more"
+                  href={catalog === "beats" ? store.url : archive.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {catalog === "beats" ? "beat store →" : "samples archive →"}
+                </a>
+              )}
+            </div>
+            <div className="preview-reels" id="reels">
+              <ReelColumns items={REELS} />
+            </div>
+          </div>
+        </section>
+
+        <section className="band work-band" id="work">
+          <WorkBackdrop item={activeProd} />
+          <div className="work-layout reveal">
+            <div>
+              <p className="band-kicker">productions</p>
+              <Productions onActive={setActiveProd} />
+            </div>
+            <div className="streams">
+              <p className="band-kicker">total streams</p>
+              <div className="stream-figure">
+                <span className="horizontal-smear" data-text={streamsLabel}>{streamsLabel}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="band tools-band" id="tools">
+          <div className="tools-layout reveal">
+            <div>
+              <p className="band-kicker">tools</p>
+              <div className="tool-marquee">
+                <DawScroll />
+              </div>
+            </div>
+            <div className="tools-links">
+              <p className="band-kicker">links</p>
+              <BetaTools />
+            </div>
+          </div>
+        </section>
+
+        <section className="band" id="about">
+          <p className="band-kicker">about</p>
+          <div className="about-layout reveal">
+            <a className="about-photo-link" href="https://www.maanasgopi.com" target="_blank" rel="noopener noreferrer" aria-label="Maanas Gopi">
+              <img className="about-photo" src={DATA.about.image} alt="" decoding="async" loading="lazy" />
             </a>
-          ))}
-        </div>
-
-        <div className="yu-gothic" style={{ display: "flex", gap: "20px", marginBottom: "2.5rem", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
-          {DATA.links.map(l => (
-            <a key={l.label} href={l.url} target="_blank" rel="noopener noreferrer" className="social-link cta-link">
-              <img src={l.icon} alt={l.label} />
-              <span>{l.label}</span>
-            </a>
-          ))}
-        </div>
-
-        <div className="divider" style={{ marginBottom: ".5rem" }} />
-
-        <div className="stats-row" style={{ width: "100%", maxWidth: 700, marginBottom: "0.8rem" }}>
-          <div style={{ textAlign: "center", flex: "0 0 auto", padding: "0 28px" }}>
-            <div className="section-label" style={{ marginBottom: "0.85rem" }}>total streams</div>
-            <div className="stream-count yu-gothic" style={{
-              fontSize: "1.8rem",
-              fontWeight: 300,
-              letterSpacing: "-0.05em",
-              color: "#fff",
-              textShadow: "0 0 8px rgba(255,255,255,0.7), 0 0 20px rgba(255,180,40,0.35), 0 0 45px rgba(255,140,20,0.18)",
-            }}>
-              {fmtStreams(count)}
+            <div className="about-copy">
+              {DATA.about.paragraphs.map(text => (
+                <p key={text}>
+                  {text.startsWith("Maanas Gopi") ? (
+                    <>
+                      <a className="about-name" href="https://www.maanasgopi.com" target="_blank" rel="noopener noreferrer">Maanas Gopi</a>
+                      {text.slice("Maanas Gopi".length)}
+                    </>
+                  ) : text}
+                </p>
+              ))}
+              <a className="about-genius" href={geniusProfile?.url || "https://genius.com/artists/1mains"} target="_blank" rel="noopener noreferrer">Genius →</a>
             </div>
           </div>
+        </section>
 
-          <div className="stats-divider-v" style={{ width: "1px", alignSelf: "stretch", background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent)", flexShrink: 0 }} />
-          <div className="stats-divider-h" style={{ display: "none" }} />
-
-          <div style={{ flex: 1, minWidth: 0, paddingLeft: "24px" }}>
-            <div className="section-label" style={{ marginBottom: "0.85rem" }}>productions</div>
-            <Productions />
+        <section className="band contact-band" id="contact">
+          <p className="band-kicker">contact</p>
+          <div className="contact-marks reveal">
+            {[
+              ...DATA.socials.map(s => ({ name: s.name, url: s.url, icon: s.icon })),
+              ...DATA.links.filter(l => l.icon).map(l => ({ name: l.label, url: l.url, icon: l.icon, note: l.description })),
+            ].map(item => (
+              <a key={item.name} className="contact-mark" href={item.url} target="_blank" rel="noopener noreferrer">
+                <img src={item.icon} alt="" />
+                <span>
+                  {item.name}
+                  {item.note && <small>{item.note}</small>}
+                </span>
+              </a>
+            ))}
           </div>
-        </div>
+        </section>
+      </main>
 
-        <BetaTools />
-
-        <div style={{ width: "100%", maxWidth: 520, marginBottom: ".5rem" }}>
-          <div className="section-label" style={{ textAlign: "center", marginBottom: "1rem" }}>tools</div>
-          <DawScroll />
-        </div>
-      </div>
+      <footer className="colophon">1mains</footer>
     </>
   );
 }

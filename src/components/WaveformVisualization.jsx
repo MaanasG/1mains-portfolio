@@ -1,14 +1,14 @@
 import React from "react";
 /** copied from maanas portfolio */
-const WaveformVisualization = ({ waveform = [], isActive }) => {
-  const activeColor = "#fbbf24"; 
-  const inactiveColor = "rgba(255, 255, 255, 0.05)";
+const WaveformVisualization = ({ waveform = [], isActive, height = 60 }) => {
+  const activeColor = "#fbbf24";
+  const inactiveColor = "rgba(255, 255, 255, 0.28)";
 
   return (
     <div 
       className="flex items-center justify-between" 
       style={{ 
-        height: "60px",
+        height: `${height}px`,
         width: "100%",
         padding: "0 6px",
         marginTop: "2px",

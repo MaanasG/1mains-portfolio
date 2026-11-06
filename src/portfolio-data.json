@@ -1,12 +1,40 @@
 {
   "artist": "1mains",
+  "about": {
+    "image": "https://images.genius.com/4fdc7bad64db9111d8184aba110d821f.1000x1000x1.jpg",
+    "paragraphs": [
+      "Maanas Gopi, better known by his stage name 1mains or Mains, is an Indian-American record producer based in New Jersey.",
+      "He is best known for his work with artists such as Autumn, Jace, Lil Poppa, SSGKobe, Desire, Jdot Breezy, and Artie J, among others."
+    ]
+  },
   "streamCount": 6700000,
   "socials": [
-    { "name": "Instagram", "url": "https://instagram.com/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" },
-    { "name": "Twitch", "url": "https://twitch.tv/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/twitch.svg" },
-    { "name": "YouTube", "url": "https://youtube.com/@1mainsarchive", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" },
-    { "name": "Genius", "url": "https://genius.com/artists/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/genius.svg" },
-    { "name": "SoundCloud", "url": "https://soundcloud.com/1mains", "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/soundcloud.svg" }
+    {
+      "name": "Instagram",
+      "url": "https://instagram.com/1mains",
+      "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg"
+    },
+    {
+      "name": "Twitch",
+      "url": "https://twitch.tv/1mains",
+      "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/twitch.svg"
+    },
+    {
+      "name": "YouTube",
+      "url": "https://youtube.com/@1mainsarchive",
+      "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg"
+    },
+    {
+      "name": "Genius",
+      "url": "https://genius.com/artists/1mains",
+      "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/genius.svg",
+      "image": "/genius-profile.jpg"
+    },
+    {
+      "name": "SoundCloud",
+      "url": "https://soundcloud.com/1mains",
+      "icon": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/soundcloud.svg"
+    }
   ],
   "links": [
     {
@@ -23,16 +51,40 @@
     }
   ],
   "daws": [
-    { "name": "FL Studio", "logo": "https://upload.wikimedia.org/wikipedia/en/6/69/FL_Studio_11_just_logo.png" },
-    { "name": "LMMS", "logo": "https://images.icon-icons.com/1381/PNG/512/lmms_93989.png" },
-    { "name": "Audacity", "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Audacity_Logo_nofilter.svg" },
-    { "name": "DaVinci Resolve 20", "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/DaVinci_Resolve_Studio.png" },
-    { "name": "Ableton", "logo": "https://preview.redd.it/am-i-the-only-one-who-didnt-know-the-ableton-logo-is-a-mix-v0-meg6nawssnb01.jpg?auto=webp&s=d9920b8989c36dd465be586f22604cc3c87c9961" },
-    { "name": "Logic Pro", "logo": "https://upload.wikimedia.org/wikipedia/commons/1/10/Logicpro-icon.png" }
+    {
+      "name": "FL Studio",
+      "logo": "https://upload.wikimedia.org/wikipedia/en/6/69/FL_Studio_11_just_logo.png"
+    },
+    {
+      "name": "LMMS",
+      "logo": "https://images.icon-icons.com/1381/PNG/512/lmms_93989.png"
+    },
+    {
+      "name": "Audacity",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Audacity_Logo_nofilter.svg"
+    },
+    {
+      "name": "DaVinci Resolve 20",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4d/DaVinci_Resolve_Studio.png"
+    },
+    {
+      "name": "Ableton",
+      "logo": "https://preview.redd.it/am-i-the-only-one-who-didnt-know-the-ableton-logo-is-a-mix-v0-meg6nawssnb01.jpg?auto=webp&s=d9920b8989c36dd465be586f22604cc3c87c9961"
+    },
+    {
+      "name": "Logic Pro",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/1/10/Logicpro-icon.png"
+    }
   ],
   "betaTools": [
-    { "label": "beatstars -> youtube conversion tool (beta)", "url": "https://typebeat-generator.onrender.com/" },
-    { "label": "one-shot ai editor (beta)", "url": "https://github.com/MaanasG/textaudiomvp" }
+    {
+      "label": "beatstars -> youtube conversion tool (beta)",
+      "url": "https://typebeat-generator.onrender.com/"
+    },
+    {
+      "label": "one-shot ai editor (beta)",
+      "url": "https://github.com/MaanasG/textaudiomvp"
+    }
   ],
   "productions": [
     {
@@ -49,6 +101,7 @@
       "artist": "Jace!",
       "cover": "https://t2.genius.com/unsafe/465x465/https%3A%2F%2Fimages.genius.com%2Fc03c02da8625945a9ffa174723657030.1000x1000x1.jpg",
       "url": "https://open.spotify.com/track/6pQNNtfCYSJZH4qMGVx0Cs?si=cff33ec71d8146e2",
+      "video": "https://www.youtube.com/watch?v=S3j8toU5cks",
       "year": 2019
     },
     {
@@ -107,7 +160,7 @@
       "url": "https://open.spotify.com/track/4qwxSPBaFxhMujIAA2ehie?si=a5b2bb16569c4cb9",
       "year": 2025
     },
-        {
+    {
       "id": 9,
       "title": "telly",
       "artist": "mig",
